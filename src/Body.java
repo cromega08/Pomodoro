@@ -33,7 +33,7 @@ public class Body extends JFrame {
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 		this.setTitle("Pomodoro");
-		this.getContentPane().setBackground(resources.restMain);
+		this.getContentPane().setBackground(resources.workMain);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.add(navBar, BorderLayout.NORTH);
