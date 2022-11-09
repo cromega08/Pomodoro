@@ -8,35 +8,52 @@ public class Body extends JFrame {
 	private Header navBar;
 	private Main main;
 	private Footer footer;
-	private JPanel west, east;
-	
-	public Body(Resources resources) {
+	private Margins leftMargin, rightMargin;
+	private Resources resources;
+
+	public Body(Resources resource) {
+
+		//? Set: Global Variables
+
+		resources = resource;
+
+		//? Create: UI Elements
 
 		navBar = new Header(resources);
 		main = new Main(resources);
-		footer = new Footer(resources);
+		footer = new Footer(resources, this);
+		leftMargin = new Margins();
+		rightMargin = new Margins();
 
-		east = new JPanel();
-		east.setPreferredSize(resources.verticalMarginDimension);
-		east.setBackground(resources.workMain);
-		west = new JPanel();
-		west.setPreferredSize(resources.verticalMarginDimension);
-		west.setBackground(resources.workMain);
+		//? Set: JFrame/Window Parameters
 
 		this.setSize(resources.windowWidth, resources.windowHeight);
+		this.setMinimumSize(resources.minimumDimension);
 		this.setResizable(true);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 		this.setTitle("Pomodoro");
-		this.getContentPane().setBackground(resources.workMain);
+		this.getContentPane().setBackground(resources.restMain);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.add(navBar, BorderLayout.NORTH);
-		this.add(east, BorderLayout.EAST);
+		this.add(rightMargin, BorderLayout.EAST);
 		this.add(footer, BorderLayout.SOUTH);
-		this.add(west, BorderLayout.WEST);
+		this.add(leftMargin, BorderLayout.WEST);
 		this.add(main, BorderLayout.CENTER);
 
 		this.setVisible(true);
 	}
+
+	private class Margins extends JPanel {
+
+		public Margins() {
+
+			//? Set: JPanel Parameters
+
+			this.setPreferredSize(resources.verticalMarginDimension);
+			this.setOpaque(false);
+		}
+	}
+	
 }

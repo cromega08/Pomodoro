@@ -1,18 +1,29 @@
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import java.awt.*;
+import java.awt.event.*;
 
-public class Footer extends JPanel {
+public class Footer extends JPanel implements ActionListener {
 
 	private UserOptions userOptions;
 	private Credits credits;
+	private JFrame pomodoroWindow;
+	private Resources resources;
 
-	public Footer(Resources resources) {
+	public Footer(Resources resource, JFrame window) {
 
-		userOptions = new UserOptions(resources);
-		credits = new Credits(resources);
+		//? Set: Global Variables
+
+		resources = resource;
+		pomodoroWindow = window;
+
+		//? Create: UI Elements
+
+		userOptions = new UserOptions(this);
+		credits = new Credits();
 
 		//? Set: JPanel Parameters
 
@@ -24,11 +35,24 @@ public class Footer extends JPanel {
 		this.add(credits);
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource() == userOptions.settings) {
+			new Settings(resources, pomodoroWindow);
+		}
+		
+		if (event.getSource() == userOptions.help) {
+
+		}
+	}
+
 	private class UserOptions extends JPanel {
 
 		private JButton help, settings;
 
-		UserOptions(Resources resources) {
+		UserOptions(ActionListener listener) {
+
+			//? Create: JButtons
 
 			help = new JButton();
 			help.setIcon(resources.helpIcon);
@@ -41,6 +65,9 @@ public class Footer extends JPanel {
 			settings.setFocusable(false);
 			settings.setBorder(resources.paddingBorder);
 			settings.setBackground(resources.workThird);
+			settings.addActionListener(listener);
+
+			//? Set: JPanel Parameters
 
 			this.setOpaque(false);
 			this.setLayout(new FlowLayout(FlowLayout.CENTER));
@@ -54,9 +81,13 @@ public class Footer extends JPanel {
 
 		private Font newFont;
 
-		Credits(Resources resources) {
+		Credits() {
+
+			//? Set: Local Font
 
 			newFont = getFont().deriveFont((float) resources.windowHeight/50);
+
+			//? Set: JLabel Parameters
 
 			this.setOpaque(false);
 			this.setText("Made by");

@@ -1,32 +1,35 @@
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 
 import java.awt.*;
+import java.awt.event.*;
 
-public class Main extends JPanel {
+public class Main extends JPanel implements ActionListener {
 
 	private Session session;
 	private Clock clock;
 	private Controls controls;
 	private Font startFont, newSmallFont, newBigFont;
-	
-	public Main(Resources resources) {
+	private Resources resources;
 
-		//? Set: Local Font Resources
+	public Main(Resources resource) {
+
+		//? Set: Global Variables
+
+		resources = resource;
+
+		//? Set: Local Font
 
 		startFont = getFont();
 		newSmallFont = startFont.deriveFont((float) resources.windowHeight/40);
 		newBigFont = startFont.deriveFont((float) resources.windowHeight/6);
 
-		//? Create: Main Sections
+		//? Create: UI Elements
 
-		session = new Session(resources);
-		clock = new Clock(resources);
-		controls = new Controls(resources);
+		session = new Session();
+		clock = new Clock();
+		controls = new Controls(this);
 
 		//? Set: JPanel parameters
 
@@ -38,26 +41,90 @@ public class Main extends JPanel {
 		this.add(controls, BorderLayout.SOUTH);
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		if (event.getSource() == controls.start) {
+
+		}
+
+		if (event.getSource() == controls.end) {
+
+		}
+
+		if (event.getSource() == controls.state) {
+
+		}
+	}
+
+	private class Session extends JPanel {
+
+		private JTextField working, breakTime, restTime;
+
+		Session() {
+
+			//? Create: JTextField Elements (State of the Session)
+
+			working = new JTextField();
+			working.setEditable(false);
+			working.setOpaque(false);
+			working.setBorder(resources.lineWorkDarkBorder);
+			working.setText("Work");
+			working.setFont(newSmallFont);
+			working.setHorizontalAlignment(JTextField.CENTER);
+			working.setForeground(resources.workSecond);
+
+			breakTime = new JTextField();
+			breakTime.setEditable(false);
+			breakTime.setOpaque(false);
+			breakTime.setBorder(resources.lineWorkDarkBorder);
+			breakTime.setText("Break");
+			breakTime.setFont(newSmallFont);
+			breakTime.setHorizontalAlignment(JTextField.CENTER);
+			breakTime.setForeground(resources.workSecond);
+
+			restTime = new JTextField();
+			restTime.setEditable(false);
+			restTime.setOpaque(false);
+			restTime.setBorder(resources.lineWorkDarkBorder);
+			restTime.setText("Rest");
+			restTime.setFont(newSmallFont);
+			restTime.setHorizontalAlignment(JTextField.CENTER);
+			restTime.setForeground(resources.workSecond);
+
+			//? Set: JPanel Parameters
+
+			this.setLayout(new GridLayout(1,3, 10, 0));
+			this.setAlignmentY(JPanel.BOTTOM_ALIGNMENT);
+			this.setOpaque(false);
+
+			this.add(working);
+			this.add(breakTime);
+			this.add(restTime);
+		}
+	}
+
 	private class Clock extends JTextField {
 
 		private JTextField period, time;
-	
-		Clock(Resources resources) {
+
+		Clock() {
+
+			//? Create: JTextField Elements (Info About Current Session)
 
 			period = new JTextField();
 			period.setEditable(false);
 			period.setOpaque(false);
 			period.setBorder(resources.emptyBorder);
-			period.setText("#0");
+			period.setText("0/0");
 			period.setFont(newSmallFont.deriveFont((float) newSmallFont.getSize() + 30));
 			period.setHorizontalAlignment(JTextField.CENTER);
 			period.setForeground(resources.workThird);
-			
+
 			time = new JTextField();
 			time.setEditable(false);
 			time.setOpaque(false);
 			time.setBorder(resources.emptyBorder);
-			time.setText("25:00");
+			time.setText("00:00");
 			time.setFont(newBigFont);
 			time.setHorizontalAlignment(JTextField.CENTER);
 			time.setForeground(resources.workContrast);
@@ -77,7 +144,9 @@ public class Main extends JPanel {
 
 		private JButton start, end, state;
 
-		Controls(Resources resources) {
+		Controls(ActionListener listener) {
+
+			//? Create: JButton Elements (Actions Related to Session)
 
 			start = new JButton();
 			start.setBackground(resources.workContrast);
@@ -85,6 +154,7 @@ public class Main extends JPanel {
 			start.setText("Start");
 			start.setFont(newSmallFont);
 			start.setForeground(resources.workMain);
+			start.addActionListener(listener);
 
 			end = new JButton();
 			end.setBackground(resources.workSecond);
@@ -92,6 +162,7 @@ public class Main extends JPanel {
 			end.setText("End");
 			end.setFont(newSmallFont);
 			end.setForeground(resources.workMain);
+			end.addActionListener(listener);
 
 			state = new JButton();
 			state.setBackground(resources.workThird);
@@ -99,57 +170,14 @@ public class Main extends JPanel {
 			state.setText("Pause");
 			state.setFont(newSmallFont);
 			state.setForeground(resources.workSecond);
+			state.addActionListener(listener);
+
+			//? Set: JPanel Parameters
 
 			this.setLayout(new FlowLayout(FlowLayout.CENTER));
 			this.setOpaque(false);
 
 			this.add(start);
-		}
-	}
-
-	private class Session extends JPanel {
-
-		private JTextField working, breakTime, restTime;
-		private Border border;
-
-		Session(Resources resources) {
-
-			border = BorderFactory.createCompoundBorder(new LineBorder(resources.workSecond, 2), resources.paddingBorder);
-
-			working = new JTextField();
-			working.setEditable(false);
-			working.setOpaque(false);
-			working.setBorder(border);
-			working.setText("Work");
-			working.setFont(newSmallFont);
-			working.setHorizontalAlignment(JTextField.CENTER);
-			working.setForeground(resources.workSecond);
-
-			breakTime = new JTextField();
-			breakTime.setEditable(false);
-			breakTime.setOpaque(false);
-			breakTime.setBorder(border);
-			breakTime.setText("Break");
-			breakTime.setFont(newSmallFont);
-			breakTime.setHorizontalAlignment(JTextField.CENTER);
-			breakTime.setForeground(resources.workSecond);
-
-			restTime = new JTextField();
-			restTime.setEditable(false);
-			restTime.setOpaque(false);
-			restTime.setBorder(border);
-			restTime.setText("Rest");
-			restTime.setFont(newSmallFont);
-			restTime.setHorizontalAlignment(JTextField.CENTER);
-			restTime.setForeground(resources.workSecond);
-
-			this.setLayout(new GridLayout(1,3, 10, 0));
-			this.setAlignmentY(JPanel.BOTTOM_ALIGNMENT);
-			this.setOpaque(false);
-			
-			this.add(working);
-			this.add(breakTime);
-			this.add(restTime);
 		}
 	}
 }

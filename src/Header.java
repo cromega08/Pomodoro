@@ -7,14 +7,19 @@ import java.awt.*;
 public class Header extends JPanel {
 
 	private JTextField userName;
-	
-	public Header(Resources resources) {
+	private Resources resources;
 
-		//? Modify: Font Size
+	public Header(Resources resource) {
+
+		//? Set: Gloabl Variables
+
+		resources = resource;
+
+		//? Set: Local Font
 
 		Font font = getFont().deriveFont((float) 30);
 
-		//? Create: Header Message
+		//? Create: JTextField Element (Header Message)
 
 		userName = new JTextField();
 		userName.setEditable(false);
