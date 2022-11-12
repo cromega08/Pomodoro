@@ -1,17 +1,14 @@
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
 public class Footer extends JPanel implements ActionListener {
 
-	private UserOptions userOptions;
-	private Credits credits;
-	private JFrame pomodoroWindow;
-	private Resources resources;
+	private final UserOptions userOptions;
+	private final Credits credits;
+	private final JFrame pomodoroWindow;
+	private final Resources resources;
 
 	public Footer(Resources resource, JFrame window) {
 
@@ -48,24 +45,20 @@ public class Footer extends JPanel implements ActionListener {
 
 	private class UserOptions extends JPanel {
 
-		private JButton help, settings;
+		private final JButton help;
+		private final JButton settings;
+		private final ActionListener listener;
 
-		UserOptions(ActionListener listener) {
+		UserOptions(ActionListener listen) {
+
+			//? Set: Global Variables
+
+			listener = listen;
 
 			//? Create: JButtons
 
-			help = new JButton();
-			help.setIcon(resources.helpIcon);
-			help.setFocusable(false);
-			help.setBorder(resources.paddingBorder);
-			help.setBackground(resources.workThird);
-
-			settings = new JButton();
-			settings.setIcon(resources.settingsIcon);
-			settings.setFocusable(false);
-			settings.setBorder(resources.paddingBorder);
-			settings.setBackground(resources.workThird);
-			settings.addActionListener(listener);
+			help = new Option(resources.helpIcon);
+			settings = new Option(resources.settingsIcon);
 
 			//? Set: JPanel Parameters
 
@@ -75,11 +68,22 @@ public class Footer extends JPanel implements ActionListener {
 			this.add(help);
 			this.add(settings);
 		}
+
+		private class Option extends JButton {
+
+			Option(ImageIcon icon) {
+				this.setIcon(icon);
+				this.setFocusable(false);
+				this.setBorder(resources.paddingBorder);
+				this.setBackground(resources.workThird);
+				this.addActionListener(listener);
+			}
+		}
 	}
 
 	private class Credits extends JLabel {
 
-		private Font newFont;
+		private final Font newFont;
 
 		Credits() {
 

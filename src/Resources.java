@@ -71,23 +71,23 @@ public class Resources {
 
 		//? Set: Icons
 
-		File helpFile = new File("../res/help.png");
+		File helpFile = new File("res/imgs/help.png");
 		Image helpImage = ImageIO.read(helpFile).getScaledInstance(windowHeight/42, windowHeight/42, Image.SCALE_DEFAULT);
 		helpIcon = new ImageIcon(helpImage, "Help Icon Image");
 
-		File settingsFile = new File("../res/settings.png");
+		File settingsFile = new File("res/imgs/settings.png");
 		Image settingsImage = ImageIO.read(settingsFile).getScaledInstance(windowHeight/42, windowHeight/42, Image.SCALE_DEFAULT);
 		settingsIcon = new ImageIcon(settingsImage, "Settings Icon Image");
 
-		File logoFile = new File("../res/cromega.png");
+		File logoFile = new File("res/imgs/cromega.png");
 		Image logoImage = ImageIO.read(logoFile).getScaledInstance(windowHeight/42, windowHeight/42, Image.SCALE_DEFAULT);
 		logoIcon = new ImageIcon(logoImage, "Cromega Logo");
 
-		File checkFile = new File("../res/check.png");
+		File checkFile = new File("res/imgs/check.png");
 		Image checkImage = ImageIO.read(checkFile).getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 		checkIcon = new ImageIcon(checkImage, "CheckBox Check Icon");
 
-		File uncheckFile = new File("../res/uncheck.png");
+		File uncheckFile = new File("res/imgs/uncheck.png");
 		Image uncheckImage = ImageIO.read(uncheckFile).getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 		uncheckIcon = new ImageIcon(uncheckImage, "Checkbox Uncheck Icon");
 	}

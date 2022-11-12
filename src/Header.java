@@ -6,29 +6,18 @@ import java.awt.*;
 
 public class Header extends JPanel {
 
-	private JTextField userName;
-	private Resources resources;
+	private final Title userName;
+	private final Resources resources;
 
 	public Header(Resources resource) {
 
-		//? Set: Gloabl Variables
+		//? Set: Global Variables
 
 		resources = resource;
 
-		//? Set: Local Font
-
-		Font font = getFont().deriveFont((float) 30);
-
 		//? Create: JTextField Element (Header Message)
 
-		userName = new JTextField();
-		userName.setEditable(false);
-		userName.setOpaque(false);
-		userName.setBorder(new EmptyBorder(40, 20, 20, 20));
-		userName.setText("Welcome, Cromega");
-		userName.setHorizontalAlignment(JTextField.CENTER);
-		userName.setFont(font);
-		userName.setForeground(resources.workThird);
+		userName = new Title("Cromega");
 
 		//? Set: JPanel Parameters
 
@@ -36,5 +25,19 @@ public class Header extends JPanel {
 		this.setOpaque(false);
 
 		this.add(userName);
+	}
+
+	private class Title extends JTextField {
+
+		Title(String name) {
+
+			this.setEditable(false);
+			this.setOpaque(false);
+			this.setBorder(new EmptyBorder(40, 20, 20, 20));
+			this.setText(String.format("Welcome, %s", name));
+			this.setHorizontalAlignment(JTextField.CENTER);
+			this.setFont(getFont().deriveFont((float) 30));
+			this.setForeground(resources.workThird);
+		}
 	}
 }

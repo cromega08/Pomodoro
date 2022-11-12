@@ -1,17 +1,17 @@
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
 public class Main extends JPanel implements ActionListener {
 
-	private Session session;
-	private Clock clock;
-	private Controls controls;
-	private Font startFont, newSmallFont, newBigFont;
-	private Resources resources;
+	private final Session session;
+	private final Clock clock;
+	private final Controls controls;
+	private final Font startFont;
+	private final Font newSmallFont;
+	private final Font newBigFont;
+	private final Resources resources;
 
 	public Main(Resources resource) {
 
@@ -58,38 +58,17 @@ public class Main extends JPanel implements ActionListener {
 
 	private class Session extends JPanel {
 
-		private JTextField working, breakTime, restTime;
+		private final SessionPanel working;
+		private final SessionPanel breakTime;
+		private final SessionPanel restTime;
 
 		Session() {
 
 			//? Create: JTextField Elements (State of the Session)
 
-			working = new JTextField();
-			working.setEditable(false);
-			working.setOpaque(false);
-			working.setBorder(resources.lineWorkDarkBorder);
-			working.setText("Work");
-			working.setFont(newSmallFont);
-			working.setHorizontalAlignment(JTextField.CENTER);
-			working.setForeground(resources.workSecond);
-
-			breakTime = new JTextField();
-			breakTime.setEditable(false);
-			breakTime.setOpaque(false);
-			breakTime.setBorder(resources.lineWorkDarkBorder);
-			breakTime.setText("Break");
-			breakTime.setFont(newSmallFont);
-			breakTime.setHorizontalAlignment(JTextField.CENTER);
-			breakTime.setForeground(resources.workSecond);
-
-			restTime = new JTextField();
-			restTime.setEditable(false);
-			restTime.setOpaque(false);
-			restTime.setBorder(resources.lineWorkDarkBorder);
-			restTime.setText("Rest");
-			restTime.setFont(newSmallFont);
-			restTime.setHorizontalAlignment(JTextField.CENTER);
-			restTime.setForeground(resources.workSecond);
+			working = new SessionPanel("Work");
+			breakTime = new SessionPanel("Break");
+			restTime = new SessionPanel("Rest");
 
 			//? Set: JPanel Parameters
 
@@ -101,33 +80,32 @@ public class Main extends JPanel implements ActionListener {
 			this.add(breakTime);
 			this.add(restTime);
 		}
+
+		private class SessionPanel extends JTextField {
+
+			SessionPanel(String text) {
+				this.setEditable(false);
+				this.setOpaque(false);
+				this.setBorder(resources.lineWorkDarkBorder);
+				this.setText(text);
+				this.setFont(newSmallFont);
+				this.setHorizontalAlignment(JTextField.CENTER);
+				this.setForeground(resources.workSecond);
+			}
+		}
 	}
 
 	private class Clock extends JTextField {
 
-		private JTextField period, time;
+		private final ClockText period;
+		private final ClockText time;
 
 		Clock() {
 
 			//? Create: JTextField Elements (Info About Current Session)
 
-			period = new JTextField();
-			period.setEditable(false);
-			period.setOpaque(false);
-			period.setBorder(resources.emptyBorder);
-			period.setText("0/0");
-			period.setFont(newSmallFont.deriveFont((float) newSmallFont.getSize() + 30));
-			period.setHorizontalAlignment(JTextField.CENTER);
-			period.setForeground(resources.workThird);
-
-			time = new JTextField();
-			time.setEditable(false);
-			time.setOpaque(false);
-			time.setBorder(resources.emptyBorder);
-			time.setText("00:00");
-			time.setFont(newBigFont);
-			time.setHorizontalAlignment(JTextField.CENTER);
-			time.setForeground(resources.workContrast);
+			period = new ClockText("0/0", newSmallFont.deriveFont((float) newSmallFont.getSize() + 30), resources.workThird);
+			time = new ClockText("00:00", newBigFont, resources.workContrast);
 
 			//? Set: JPanel Parameters
 
@@ -138,39 +116,40 @@ public class Main extends JPanel implements ActionListener {
 			this.add(period, BorderLayout.NORTH);
 			this.add(time, BorderLayout.CENTER);
 		}
+
+		private class ClockText extends JTextField {
+
+			ClockText(String text, Font newFont, Color foreground) {
+
+				this.setEditable(false);
+				this.setOpaque(false);
+				this.setBorder(resources.emptyBorder);
+				this.setText(text);
+				this.setFont(newFont);
+				this.setHorizontalAlignment(JTextField.CENTER);
+				this.setForeground(foreground);
+			}
+		}
 	}
 
 	private class Controls extends JPanel {
 
-		private JButton start, end, state;
+		private final ControlsButton start;
+		private final ControlsButton end;
+		private final ControlsButton state;
+		private final ActionListener listener;
 
-		Controls(ActionListener listener) {
+		Controls(ActionListener listen) {
+
+			//? Set: Global Variables
+
+			listener = listen;
 
 			//? Create: JButton Elements (Actions Related to Session)
 
-			start = new JButton();
-			start.setBackground(resources.workContrast);
-			start.setBorder(resources.paddingBorder);
-			start.setText("Start");
-			start.setFont(newSmallFont);
-			start.setForeground(resources.workMain);
-			start.addActionListener(listener);
-
-			end = new JButton();
-			end.setBackground(resources.workSecond);
-			end.setBorder(resources.paddingBorder);
-			end.setText("End");
-			end.setFont(newSmallFont);
-			end.setForeground(resources.workMain);
-			end.addActionListener(listener);
-
-			state = new JButton();
-			state.setBackground(resources.workThird);
-			state.setBorder(resources.paddingBorder);
-			state.setText("Pause");
-			state.setFont(newSmallFont);
-			state.setForeground(resources.workSecond);
-			state.addActionListener(listener);
+			start = new ControlsButton("Start");
+			end = new ControlsButton("End");
+			state = new ControlsButton("Pause");
 
 			//? Set: JPanel Parameters
 
@@ -178,6 +157,19 @@ public class Main extends JPanel implements ActionListener {
 			this.setOpaque(false);
 
 			this.add(start);
+		}
+
+		private class ControlsButton extends JButton {
+
+			ControlsButton(String text) {
+				this.setBackground(resources.workContrast);
+				this.setBorder(resources.paddingBorder);
+				this.setFocusable(false);
+				this.setText(text);
+				this.setFont(newSmallFont);
+				this.setForeground(resources.workMain);
+				this.addActionListener(listener);
+			}
 		}
 	}
 }

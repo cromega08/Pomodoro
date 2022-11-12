@@ -5,11 +5,12 @@ import java.awt.*;
 
 public class Body extends JFrame {
 
-	private Header navBar;
-	private Main main;
-	private Footer footer;
-	private Margins leftMargin, rightMargin;
-	private Resources resources;
+	private final Header navBar;
+	private final Main main;
+	private final Footer footer;
+	private final Margins leftMargin;
+	private final Margins rightMargin;
+	private final Resources resources;
 
 	public Body(Resources resource) {
 
