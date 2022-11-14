@@ -1,4 +1,15 @@
-<?xml version="1.1" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <settings>
-	
+  <time>
+    <time-sessions>8</time-sessions>
+    <time-work>25</time-work>
+    <time-break>5</time-break>
+    <time-rest>15</time-rest>
+    <time-interval>3</time-interval>
+  </time>
+  <auto-start>
+    <start-work>false</start-work>
+    <start-break>false</start-break>
+    <start-rest>false</start-rest>
+  </auto-start>
 </settings>

@@ -100,11 +100,18 @@ public class Main extends JPanel implements ActionListener {
 		private final ClockText period;
 		private final ClockText time;
 
+		/* TODO:
+		* - Value the possibility of making an Text Field for the periods count and the user
+		* 	change the number of pomodoro through the interface
+		* */
+
 		Clock() {
 
 			//? Create: JTextField Elements (Info About Current Session)
 
-			period = new ClockText("0/0", newSmallFont.deriveFont((float) newSmallFont.getSize() + 30), resources.workThird);
+			period = new ClockText("0/0",
+					newSmallFont.deriveFont((float) newSmallFont.getSize() + 30),
+					resources.workThird);
 			time = new ClockText("00:00", newBigFont, resources.workContrast);
 
 			//? Set: JPanel Parameters

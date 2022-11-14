@@ -1,16 +1,20 @@
+import org.jdom2.JDOMException;
+
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.net.URI;
 
 public class Footer extends JPanel implements ActionListener {
 
 	private final UserOptions userOptions;
 	private final Credits credits;
-	private final JFrame pomodoroWindow;
+	private final Body pomodoroWindow;
 	private final Resources resources;
 
-	public Footer(Resources resource, JFrame window) {
+	public Footer(Resources resource, Body window) {
 
 		//? Set: Global Variables
 
@@ -35,7 +39,11 @@ public class Footer extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == userOptions.settings) {
-			new Settings(resources, pomodoroWindow);
+			try {
+				new Settings(resources, pomodoroWindow);
+			} catch (IOException | JDOMException e) {
+				throw new RuntimeException(e);
+			}
 		}
 		
 		if (event.getSource() == userOptions.help) {
@@ -83,13 +91,15 @@ public class Footer extends JPanel implements ActionListener {
 
 	private class Credits extends JLabel {
 
-		private final Font newFont;
+		/* TODO:
+		* - Implement the Redirect to my github
+		* */
 
 		Credits() {
 
 			//? Set: Local Font
 
-			newFont = getFont().deriveFont((float) resources.windowHeight/50);
+			Font newFont = getFont().deriveFont((float) resources.windowHeight / 50);
 
 			//? Set: JLabel Parameters
 
@@ -101,6 +111,36 @@ public class Footer extends JPanel implements ActionListener {
 			this.setHorizontalTextPosition(JLabel.LEFT);
 			this.setVerticalAlignment(JLabel.CENTER);
 			this.setHorizontalAlignment(JLabel.CENTER);
+
+			this.addMouseListener(new MouseListen());
+		}
+
+		private class MouseListen extends MouseAdapter {
+
+			public void mousePressed(MouseEvent event) {
+				try {
+					openWebPage();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+
+			private void openWebPage() throws IOException {
+
+				URI uri = URI.create("https://github.com/Cromega08");
+				Desktop desktop = Desktop.isDesktopSupported()? Desktop.getDesktop():null;
+
+				System.out.println(uri);
+
+				if(desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {desktop.browse(uri);}
+				else {
+					JOptionPane.showMessageDialog(
+							pomodoroWindow,
+							String.format("Error opening author Github: \"%s\"", uri),
+							"Error Opening Link",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
 		}
 	}
 }

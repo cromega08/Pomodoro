@@ -1,8 +1,5 @@
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.*;
 
 public class Header extends JPanel {
 
@@ -17,7 +14,7 @@ public class Header extends JPanel {
 
 		//? Create: JTextField Element (Header Message)
 
-		userName = new Title("Cromega");
+		userName = new Title(resource.user);
 
 		//? Set: JPanel Parameters
 

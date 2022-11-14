@@ -1,11 +1,12 @@
+import org.apache.commons.lang3.text.WordUtils;
+import org.jdom2.JDOMException;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.border.Border;
 
 public class Resources {
 
@@ -18,11 +19,15 @@ public class Resources {
 			lineRestLightBorder, lineRestDarkBorder, underlineRestLightBorder, underlineRestDarkBorder,
 			inputWorkLightBorder, inputWorkDarkBorder, inputRestLightBorder, inputRestDarkBorder;
 	public ImageIcon helpIcon, settingsIcon, logoIcon, checkIcon, uncheckIcon;
+	public  FileHandler fileHandler;
+	public String user;
 
-	public Resources() throws IOException {
+	public Resources() throws IOException, JDOMException {
 
-		//? Set: Generic Tools
+		//? Set: Handlers and Tools
 
+		user = WordUtils.capitalizeFully(System.getProperty("user.name"));
+		fileHandler = new FileHandler();
 		tools = Toolkit.getDefaultToolkit();
 
 		//? Set: Dimensions

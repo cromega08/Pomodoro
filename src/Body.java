@@ -3,6 +3,10 @@ import javax.swing.JPanel;
 
 import java.awt.*;
 
+/* TODO:
+*  - Implements the change of color for each period and state
+* */
+
 public class Body extends JFrame {
 
 	private final Header navBar;
@@ -45,6 +49,10 @@ public class Body extends JFrame {
 
 		this.setVisible(true);
 	}
+
+	private void disableMainWindow() {this.setEnabled(false);}
+
+	private void enableMainWindow() {this.setEnabled(true);}
 
 	private class Margins extends JPanel {
 
