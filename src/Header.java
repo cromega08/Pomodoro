@@ -6,19 +6,19 @@ public class Header extends JPanel {
 	private final Title userName;
 	private final Resources resources;
 
-	public Header(Resources resource) {
+	public Header(Resources resourcesInstance) {
 
 		//? Set: Global Variables
 
-		resources = resource;
+		resources = resourcesInstance;
 
 		//? Create: JTextField Element (Header Message)
 
-		userName = new Title(resource.user);
+		userName = new Title(resourcesInstance.handlerTools.user);
 
 		//? Set: JPanel Parameters
 
-		this.setPreferredSize(resources.horizontalMarginDimension);
+		this.setPreferredSize(resources.projectDimensions.horizontalMarginDimension);
 		this.setOpaque(false);
 
 		this.add(userName);
@@ -34,7 +34,7 @@ public class Header extends JPanel {
 			this.setText(String.format("Welcome, %s", name));
 			this.setHorizontalAlignment(JTextField.CENTER);
 			this.setFont(getFont().deriveFont((float) 30));
-			this.setForeground(resources.workThird);
+			this.setForeground(resources.colors.workThird);
 		}
 	}
 }

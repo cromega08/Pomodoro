@@ -13,17 +13,17 @@ public class Main extends JPanel implements ActionListener {
 	private final Font newBigFont;
 	private final Resources resources;
 
-	public Main(Resources resource) {
+	public Main(Resources resourcesInstance) {
 
 		//? Set: Global Variables
 
-		resources = resource;
+		resources = resourcesInstance;
 
 		//? Set: Local Font
 
 		startFont = getFont();
-		newSmallFont = startFont.deriveFont((float) resources.windowHeight/40);
-		newBigFont = startFont.deriveFont((float) resources.windowHeight/6);
+		newSmallFont = startFont.deriveFont((float) resources.projectDimensions.windowHeight/40);
+		newBigFont = startFont.deriveFont((float) resources.projectDimensions.windowHeight/6);
 
 		//? Create: UI Elements
 
@@ -73,7 +73,7 @@ public class Main extends JPanel implements ActionListener {
 			//? Set: JPanel Parameters
 
 			this.setLayout(new GridLayout(1,3, 10, 0));
-			this.setAlignmentY(JPanel.BOTTOM_ALIGNMENT);
+			this.setAlignmentY(JPanel.CENTER_ALIGNMENT);
 			this.setOpaque(false);
 
 			this.add(working);
@@ -86,55 +86,102 @@ public class Main extends JPanel implements ActionListener {
 			SessionPanel(String text) {
 				this.setEditable(false);
 				this.setOpaque(false);
-				this.setBorder(resources.lineWorkDarkBorder);
+				this.setBorder(resources.borders.lineWorkBorder);
 				this.setText(text);
 				this.setFont(newSmallFont);
 				this.setHorizontalAlignment(JTextField.CENTER);
-				this.setForeground(resources.workSecond);
+				this.setForeground(resources.colors.workSecond);
 			}
 		}
 	}
 
 	private class Clock extends JTextField {
 
-		private final ClockText period;
+		private final ClockSessions sessions;
 		private final ClockText time;
-
-		/* TODO:
-		* - Value the possibility of making an Text Field for the periods count and the user
-		* 	change the number of pomodoro through the interface
-		* */
 
 		Clock() {
 
 			//? Create: JTextField Elements (Info About Current Session)
 
-			period = new ClockText("0/0",
-					newSmallFont.deriveFont((float) newSmallFont.getSize() + 30),
-					resources.workThird);
-			time = new ClockText("00:00", newBigFont, resources.workContrast);
+			sessions = new ClockSessions();
+			time = new ClockText();
 
 			//? Set: JPanel Parameters
 
 			this.setLayout(new BorderLayout());
 			this.setOpaque(false);
-			this.setBorder(resources.emptyBorder);
+			this.setBorder(resources.borders.emptyBorder);
 
-			this.add(period, BorderLayout.NORTH);
+			this.add(sessions, BorderLayout.NORTH);
 			this.add(time, BorderLayout.CENTER);
 		}
 
 		private class ClockText extends JTextField {
 
-			ClockText(String text, Font newFont, Color foreground) {
+			ClockText() {
+
+				//? Set: JTextField parameters
 
 				this.setEditable(false);
 				this.setOpaque(false);
-				this.setBorder(resources.emptyBorder);
-				this.setText(text);
-				this.setFont(newFont);
+				this.setBorder(resources.borders.emptyBorder);
+				this.setFont(newBigFont);
 				this.setHorizontalAlignment(JTextField.CENTER);
-				this.setForeground(foreground);
+				this.setForeground(resources.colors.workContrast);
+
+				newTime(resources.handlerTools.fileHandler.getElementValue("time-work"));
+			}
+
+			private void newTime(String min) {
+				this.setText(String.format("%s:00", min));
+			}
+
+			private void newTime(String min, String sec) {
+				this.setText(String.format("%1$s:%2$s", min, sec));
+			}
+		}
+
+		private class ClockSessions extends JPanel {
+
+			private final Font localFont;
+			private final SessionsText sessionsText, separator;
+			private final InputField totalSessions;
+
+			ClockSessions() {
+
+				//? Set: Global Variables of this class
+
+				localFont = newSmallFont.deriveFont((float) newSmallFont.getSize() + 30);
+
+				//? Create: JTextField Elements
+
+				sessionsText = new SessionsText("0");
+				separator = new SessionsText("/");
+				totalSessions = new InputField(resources, "time-sessions", localFont);
+
+				//? Set: JPanel Parameters
+
+				this.setLayout(new FlowLayout(FlowLayout.TRAILING));
+				this.setAlignmentY(JPanel.BOTTOM_ALIGNMENT);
+				this.setOpaque(false);
+
+				this.add(sessionsText);
+				this.add(separator);
+				this.add(totalSessions);
+			}
+
+			private class SessionsText extends JTextField {
+
+				SessionsText(String text) {
+					this.setEditable(false);
+					this.setOpaque(false);
+					this.setBorder(resources.borders.emptyBorder);
+					this.setText(text);
+					this.setFont(localFont);
+					this.setHorizontalAlignment(JTextField.CENTER);
+					this.setForeground(resources.colors.workThird);
+				}
 			}
 		}
 	}
@@ -169,12 +216,12 @@ public class Main extends JPanel implements ActionListener {
 		private class ControlsButton extends JButton {
 
 			ControlsButton(String text) {
-				this.setBackground(resources.workContrast);
-				this.setBorder(resources.paddingBorder);
+				this.setBackground(resources.colors.workContrast);
+				this.setBorder(resources.borders.paddingBorder);
 				this.setFocusable(false);
 				this.setText(text);
 				this.setFont(newSmallFont);
-				this.setForeground(resources.workMain);
+				this.setForeground(resources.colors.workMain);
 				this.addActionListener(listener);
 			}
 		}

@@ -14,11 +14,11 @@ public class Footer extends JPanel implements ActionListener {
 	private final Body pomodoroWindow;
 	private final Resources resources;
 
-	public Footer(Resources resource, Body window) {
+	public Footer(Resources resourcesInstance, Body window) {
 
 		//? Set: Global Variables
 
-		resources = resource;
+		resources = resourcesInstance;
 		pomodoroWindow = window;
 
 		//? Create: UI Elements
@@ -28,7 +28,7 @@ public class Footer extends JPanel implements ActionListener {
 
 		//? Set: JPanel Parameters
 
-		this.setPreferredSize(resources.horizontalMarginDimension);
+		this.setPreferredSize(resources.projectDimensions.horizontalMarginDimension);
 		this.setLayout(new GridLayout(2, 1));
 		this.setOpaque(false);
 
@@ -65,8 +65,8 @@ public class Footer extends JPanel implements ActionListener {
 
 			//? Create: JButtons
 
-			help = new Option(resources.helpIcon);
-			settings = new Option(resources.settingsIcon);
+			help = new Option(resources.icons.helpIcon);
+			settings = new Option(resources.icons.settingsIcon);
 
 			//? Set: JPanel Parameters
 
@@ -82,8 +82,8 @@ public class Footer extends JPanel implements ActionListener {
 			Option(ImageIcon icon) {
 				this.setIcon(icon);
 				this.setFocusable(false);
-				this.setBorder(resources.paddingBorder);
-				this.setBackground(resources.workThird);
+				this.setBorder(resources.borders.paddingBorder);
+				this.setBackground(resources.colors.workThird);
 				this.addActionListener(listener);
 			}
 		}
@@ -91,31 +91,27 @@ public class Footer extends JPanel implements ActionListener {
 
 	private class Credits extends JLabel {
 
-		/* TODO:
-		* - Implement the Redirect to my github
-		* */
-
 		Credits() {
 
 			//? Set: Local Font
 
-			Font newFont = getFont().deriveFont((float) resources.windowHeight / 50);
+			Font newFont = getFont().deriveFont((float) resources.projectDimensions.windowHeight / 50);
 
 			//? Set: JLabel Parameters
 
 			this.setOpaque(false);
 			this.setText("Made by");
 			this.setFont(newFont);
-			this.setForeground(resources.workSecond);
-			this.setIcon(resources.logoIcon);
+			this.setForeground(resources.colors.workSecond);
+			this.setIcon(resources.icons.logoIcon);
 			this.setHorizontalTextPosition(JLabel.LEFT);
 			this.setVerticalAlignment(JLabel.CENTER);
 			this.setHorizontalAlignment(JLabel.CENTER);
 
-			this.addMouseListener(new MouseListen());
+			this.addMouseListener(new SelectedListener());
 		}
 
-		private class MouseListen extends MouseAdapter {
+		private class SelectedListener extends MouseAdapter {
 
 			public void mousePressed(MouseEvent event) {
 				try {

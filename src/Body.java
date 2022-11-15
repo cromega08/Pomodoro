@@ -16,11 +16,11 @@ public class Body extends JFrame {
 	private final Margins rightMargin;
 	private final Resources resources;
 
-	public Body(Resources resource) {
+	public Body(Resources resourcesInstance) {
 
 		//? Set: Global Variables
 
-		resources = resource;
+		resources = resourcesInstance;
 
 		//? Create: UI Elements
 
@@ -32,13 +32,13 @@ public class Body extends JFrame {
 
 		//? Set: JFrame/Window Parameters
 
-		this.setSize(resources.windowWidth, resources.windowHeight);
-		this.setMinimumSize(resources.minimumDimension);
+		this.setSize(resources.projectDimensions.windowWidth, resources.projectDimensions.windowHeight);
+		this.setMinimumSize(resources.projectDimensions.minimumDimension);
 		this.setResizable(true);
 		this.setLocationRelativeTo(null);
 		this.setLayout(new BorderLayout());
 		this.setTitle("Pomodoro");
-		this.getContentPane().setBackground(resources.workMain);
+		this.getContentPane().setBackground(resources.colors.workMain);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		this.add(navBar, BorderLayout.NORTH);
@@ -50,9 +50,9 @@ public class Body extends JFrame {
 		this.setVisible(true);
 	}
 
-	private void disableMainWindow() {this.setEnabled(false);}
+	public void disableMainWindow() {this.setEnabled(false);}
 
-	private void enableMainWindow() {this.setEnabled(true);}
+	public void enableMainWindow() {this.setEnabled(true);}
 
 	private class Margins extends JPanel {
 
@@ -60,7 +60,7 @@ public class Body extends JFrame {
 
 			//? Set: JPanel Parameters
 
-			this.setPreferredSize(resources.verticalMarginDimension);
+			this.setPreferredSize(resources.projectDimensions.verticalMarginDimension);
 			this.setOpaque(false);
 		}
 	}

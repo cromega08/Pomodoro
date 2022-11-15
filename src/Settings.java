@@ -1,26 +1,15 @@
 import org.jdom2.JDOMException;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class Settings extends JFrame implements ActionListener, WindowListener {
-
-	//- Value if Download new Icons fos Check 
+public class Settings extends JFrame implements ActionListener {
 
 	private final Resources resources;
 	private final Body pomodoroWindow;
-	private final Boolean restPalette;
 	private final Check checkStartWork, checkStartBreak, checkStartRest;
 	private final Input inputNumberSessions, inputTimeWork, inputTimeBreak, inputTimeRest, inputIntervalRest;
 	private final Input[] inputs;
@@ -30,20 +19,15 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 	private final Apply applyButton;
 	private final String[] settingsInputValues, settingsCheckValues;
 
-	/*TODO:
-	* - Set an attribute to each input element to automatize the setting
-	* - Set the values specified in the XML to each Setting
-	* */
 
-	public Settings(Resources resource, Body mainWindow) throws IOException, JDOMException {
+	public Settings(Resources resourcesInstance, Body mainWindow) throws IOException, JDOMException {
 
 		//? Set: Global Variables
 
-		resources = resource;
-		settingsInputValues = resources.fileHandler.getTimeValues();
-		settingsCheckValues = resources.fileHandler.getStartValues();
+		resources = resourcesInstance;
+		settingsInputValues = resources.handlerTools.fileHandler.getTimeValues();
+		settingsCheckValues = resources.handlerTools.fileHandler.getStartValues();
 		pomodoroWindow = mainWindow;
-		restPalette = pomodoroWindow.getContentPane().getBackground() == resources.restMain;
 
 		//? Create: JCheckBoxes Customized Elements (Check)
 
@@ -53,11 +37,11 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 
 		//? Create: JTextField Customized Elements (Input)
 
-		inputNumberSessions = new Input(this, 0);
-		inputTimeWork = new Input(this, 1);
-		inputTimeBreak = new Input(this, 2);
-		inputTimeRest = new Input(this, 3);
-		inputIntervalRest = new Input(this, 4);
+		inputNumberSessions = new Input(0);
+		inputTimeWork = new Input(1);
+		inputTimeBreak = new Input(2);
+		inputTimeRest = new Input(3);
+		inputIntervalRest = new Input(4);
 
 		inputs = new Input[]{inputNumberSessions, inputTimeWork, inputTimeBreak, inputTimeRest, inputIntervalRest};
 
@@ -86,13 +70,14 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 
 		//? Set: JFrame/Window Parameters
 
-		this.setSize(resources.windowWidth/3, resources.windowHeight/2);
+		this.setSize(resources.projectDimensions.windowWidth/3, resources.projectDimensions.windowHeight/2);
 		this.setResizable(false);
 		this.setLocationRelativeTo(pomodoroWindow);
 		this.setLayout(new GridLayout(9, 1));
 		this.setTitle("Pomodoro - Settings");
 		this.getContentPane().setBackground(pomodoroWindow.getContentPane().getBackground());
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.addWindowListener(new SettingsListener());
 
 		this.add(settingNumberSessions);
 		this.add(settingTimeWork);
@@ -116,14 +101,14 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 			boolean[] checks = {checkStartWork.isSelected(),
 					checkStartBreak.isSelected(),
 					checkStartRest.isSelected()};
-			String[] inputs = {inputNumberSessions.inputField.getText(),
-					inputTimeWork.inputField.getText(),
-					inputTimeBreak.inputField.getText(),
-					inputTimeRest.inputField.getText(),
-					inputIntervalRest.inputField.getText()};
+			String[] inputs = {inputNumberSessions.localInputField.getText(),
+					inputTimeWork.localInputField.getText(),
+					inputTimeBreak.localInputField.getText(),
+					inputTimeRest.localInputField.getText(),
+					inputIntervalRest.localInputField.getText()};
 
 			try {
-				resources.fileHandler.setElementValues(checks, inputs);
+				resources.handlerTools.fileHandler.setElementValues(checks, inputs);
 			} catch (IOException | JDOMException e) {
 				throw new RuntimeException(e);
 			}
@@ -132,24 +117,12 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 		}
 	}
 
-	@Override
-	public void windowOpened(WindowEvent windowEvent) {
-		pomodoroWindow.setEnabled(false);
+	private class SettingsListener extends WindowAdapter {
+
+		public void windowOpened(WindowEvent e) {pomodoroWindow.disableMainWindow();}
+
+		public void windowClosed(WindowEvent e) {pomodoroWindow.enableMainWindow();}
 	}
-
-	@Override
-	public void windowClosed(WindowEvent windowEvent) {pomodoroWindow.setEnabled(true);}
-
-	@Override
-	public void windowClosing(WindowEvent windowEvent) {}
-	@Override
-	public void windowIconified(WindowEvent windowEvent) {}
-	@Override
-	public void windowDeiconified(WindowEvent windowEvent) {}
-	@Override
-	public void windowActivated(WindowEvent windowEvent) {}
-	@Override
-	public void windowDeactivated(WindowEvent windowEvent) {}
 
 	private class Setting extends JPanel {
 
@@ -158,7 +131,7 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 			//? Set: JPanel parameters
 
 			this.setOpaque(false);
-			this.setBorder(restPalette? resources.underlineRestLightBorder:resources.underlineWorkLightBorder);
+			this.setBorder(resources.colors.restPalette? resources.borders.underlineRestBorder :resources.borders.underlineWorkBorder);
 			this.setLayout(new BorderLayout(10, 10));
 
 			this.add(new Label(label), BorderLayout.CENTER);
@@ -174,10 +147,10 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 				//? Set: JLabel Parameters
 
 				this.setOpaque(false);
-				this.setBorder(resources.paddingBorder);
+				this.setBorder(resources.borders.paddingBorder);
 				this.setText(label);
 				this.setHorizontalTextPosition(JLabel.LEADING);
-				this.setForeground(restPalette? resources.restContrast:resources.workThird);
+				this.setForeground(resources.colors.restPalette? resources.colors.restContrast:resources.colors.workThird);
 			}
 		}
 	}
@@ -189,9 +162,9 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 			//? Set: JCheckBox Parameters
 
 			this.setOpaque(false);
-			this.setBorder(resources.paddingBorder);
-			this.setIcon(resources.uncheckIcon);
-			this.setSelectedIcon(resources.checkIcon);
+			this.setBorder(resources.borders.paddingBorder);
+			this.setIcon(resources.icons.uncheckIcon);
+			this.setSelectedIcon(resources.icons.checkIcon);
 			this.addActionListener(listener);
 
 			this.setSelected(Boolean.parseBoolean(settingsCheckValues[indexValue]));
@@ -200,68 +173,38 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 
 	private class Input extends JPanel {
 
-		private final InputField inputField;
+		private final LocalInputField localInputField;
 		private final int indexValue;
 
-		Input(ActionListener listener, int index) {
+		Input(int index) {
 
 			//? Create: Input Field
 
 			indexValue = index;
-			inputField = new InputField(listener);
+			localInputField = new LocalInputField(resources, indexValue, settingsInputValues);
 
 			//? Set: JPanel Parameters
 
 			this.setOpaque(false);
-			this.add(inputField);
+			this.setAlignmentY(JPanel.CENTER_ALIGNMENT);
+			this.add(localInputField);
 		}
 
-		private class InputField extends JTextField implements KeyListener {
+		private class LocalInputField extends InputField {
 
-			InputField(ActionListener listener) {
-
-				this.setOpaque(false);
-				this.setColumns(3);
-				this.setBorder(restPalette? resources.inputRestDarkBorder:resources.inputWorkDarkBorder);
-				this.setCaretColor(restPalette? resources.restThird:resources.workThird);
-				this.setText(String.format("%d", Integer.parseInt(settingsInputValues[indexValue])));
-				this.setHorizontalAlignment(JTextField.TRAILING);
-				this.setForeground(restPalette? resources.restContrast:resources.workContrast);
-				this.addActionListener(listener);
-				this.addKeyListener(this);
+			LocalInputField(Resources resourcesInstance, int indexValue, String... pairElements) {
+				super(resourcesInstance, indexValue, pairElements);
 			}
 
 			private void checkInputs() {
 				boolean activate = Arrays.stream(inputs).noneMatch(
-						input -> input.inputField.getText().length() < 1);
+						input -> input.localInputField.getText().length() < 1);
 
 				if (activate) {applyButton.enableButton();}
 				else {applyButton.disableButton();}
 			}
 
-			@Override
-			public void keyTyped(KeyEvent keyEvent) {
-
-				char keyChar = keyEvent.getKeyChar();
-				boolean isDelete = checkDelete(keyChar);
-				Pattern pattern = Pattern.compile("[^0-9]", Pattern.UNICODE_CASE);
-				Matcher matcher = pattern.matcher(String.format("%s", keyChar));
-
-				if ((this.getText().length() >= 2 && !isDelete) || matcher.find()) {
-					if (!isDelete) resources.tools.beep();
-					keyEvent.consume();
-				}
-			}
-
-			@Override
-			public void keyPressed(KeyEvent keyEvent) {}
-
-			@Override
 			public void keyReleased(KeyEvent keyEvent) {checkInputs();}
-		}
-
-		private boolean checkDelete(char keyChar) {
-			return (keyChar == KeyEvent.VK_DELETE || keyChar == KeyEvent.VK_BACK_SPACE);
 		}
 	}
 
@@ -269,23 +212,23 @@ public class Settings extends JFrame implements ActionListener, WindowListener {
 
 		Apply(ActionListener listener) {
 			this.setFocusable(false);
-			this.setBackground(restPalette? resources.restContrast:resources.workContrast);
-			this.setBorder(resources.paddingBorder);
+			this.setBackground(resources.colors.restPalette? resources.colors.restContrast:resources.colors.workContrast);
+			this.setBorder(resources.borders.paddingBorder);
 			this.setText("Apply Changes");
-			this.setForeground(restPalette? resources.restMain:resources.workMain);
+			this.setForeground(resources.colors.restPalette? resources.colors.restMain:resources.colors.workMain);
 			this.addActionListener(listener);
 		}
 
 		private void disableButton() {
 			this.setEnabled(false);
-			this.setBackground(restPalette? resources.restMain:resources.workMain);
-			this.setForeground(restPalette? resources.restContrast:resources.workContrast);
+			this.setBackground(resources.colors.restPalette? resources.colors.restMain:resources.colors.workMain);
+			this.setForeground(resources.colors.restPalette? resources.colors.restContrast:resources.colors.workContrast);
 		}
 
 		private void enableButton() {
 			this.setEnabled(true);
-			this.setBackground(restPalette? resources.restContrast:resources.workContrast);
-			this.setForeground(restPalette? resources.restMain:resources.workMain);
+			this.setBackground(resources.colors.restPalette? resources.colors.restContrast:resources.colors.workContrast);
+			this.setForeground(resources.colors.restPalette? resources.colors.restMain:resources.colors.workMain);
 		}
 	}
 }

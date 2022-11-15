@@ -24,12 +24,11 @@ public class FileHandler {
 	private final Document settingsDoc;
 	private final Element settingsElement;
 	private final FileChannel settingsChannel;
-	private final Path settingsPath;
 
 
 	FileHandler() throws IOException, JDOMException {
 
-		settingsPath = Paths.get("res/settings/settings.xml");
+		Path settingsPath = Paths.get("res/settings/settings.xml");
 		File settingsFile = settingsPath.toFile();
 		boolean settingsExist = settingsFile.createNewFile();
 		settingsChannel = FileChannel.open(settingsPath, StandardOpenOption.WRITE);
