@@ -1,4 +1,3 @@
-import org.apache.commons.lang3.text.WordUtils;
 import org.jdom2.JDOMException;
 
 import javax.imageio.ImageIO;
@@ -46,9 +45,16 @@ public class Resources {
 		public Toolkit tools;
 		
 		HandlerTools() throws IOException, JDOMException {
-			user = WordUtils.capitalizeFully(System.getProperty("user.name"));
+			user = setUserName();
 			fileHandler = new FileHandler();
 			tools = Toolkit.getDefaultToolkit();
+		}
+
+		private String setUserName() {
+			String userName = System.getProperty("user.name");
+			String[] splitUserName = userName.split("[^a-zA-Z0-9]");
+
+			return splitUserName[0].substring(0, 1).toUpperCase() + splitUserName[0].substring(1);
 		}
 	}
 	
@@ -95,12 +101,13 @@ public class Resources {
 	
 	public class Borders {
 
-		public Border emptyBorder, paddingBorder, lineWorkBorder, underlineWorkBorder, underlineRestBorder;
+		public Border emptyBorder, paddingBorder, lineWorkBorder, lineRestBorder, underlineWorkBorder, underlineRestBorder;
 		
 		Borders() {
 			emptyBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
 			paddingBorder = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 			lineWorkBorder = BorderFactory.createLineBorder(colors.workSecond, 3);
+			lineRestBorder = BorderFactory.createLineBorder(colors.restSecond, 3);
 			underlineWorkBorder = BorderFactory.createMatteBorder(0, 0, 2, 0, colors.workSecond);
 			underlineRestBorder = BorderFactory.createMatteBorder(0, 0, 2, 0, colors.restSecond);
 		}

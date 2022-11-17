@@ -4,12 +4,12 @@ import javax.swing.JPanel;
 import java.awt.*;
 
 /* TODO:
-*  - Implements the change of color for each period and state
+*  - Make the controller for disable or enable elements
 * */
 
-public class Body extends JFrame {
+public class Body extends JFrame implements PaletteSetters {
 
-	private final Header navBar;
+	private final Header header;
 	private final Main main;
 	private final Footer footer;
 	private final Margins leftMargin;
@@ -24,8 +24,8 @@ public class Body extends JFrame {
 
 		//? Create: UI Elements
 
-		navBar = new Header(resources);
-		main = new Main(resources);
+		header = new Header(resources);
+		main = new Main(resources, this);
 		footer = new Footer(resources, this);
 		leftMargin = new Margins();
 		rightMargin = new Margins();
@@ -41,7 +41,7 @@ public class Body extends JFrame {
 		this.getContentPane().setBackground(resources.colors.workMain);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		this.add(navBar, BorderLayout.NORTH);
+		this.add(header, BorderLayout.NORTH);
 		this.add(rightMargin, BorderLayout.EAST);
 		this.add(footer, BorderLayout.SOUTH);
 		this.add(leftMargin, BorderLayout.WEST);
@@ -50,9 +50,35 @@ public class Body extends JFrame {
 		this.setVisible(true);
 	}
 
+	public void enableInput() {
+		main.enableInput();
+		footer.enableInput();
+	}
+
+	public void disableInput() {
+		main.disableInput();
+		footer.disableInput();
+	}
+
 	public void disableMainWindow() {this.setEnabled(false);}
 
 	public void enableMainWindow() {this.setEnabled(true);}
+
+	@Override
+	public void setWorkPalette() {
+		this.getContentPane().setBackground(resources.colors.workMain);
+		header.setWorkPalette();
+		main.setWorkPalette();
+		footer.setWorkPalette();
+	}
+
+	@Override
+	public void setRestPalette() {
+		this.getContentPane().setBackground(resources.colors.restMain);
+		header.setRestPalette();
+		main.setRestPalette();
+		footer.setRestPalette();
+	}
 
 	private class Margins extends JPanel {
 

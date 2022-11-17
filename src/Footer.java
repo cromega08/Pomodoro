@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.net.URI;
 
-public class Footer extends JPanel implements ActionListener {
+public class Footer extends JPanel implements ActionListener, PaletteSetters {
 
 	private final UserOptions userOptions;
 	private final Credits credits;
@@ -36,6 +36,23 @@ public class Footer extends JPanel implements ActionListener {
 		this.add(credits);
 	}
 
+	public void enableInput() {userOptions.enableInput();}
+	public void disableInput() {
+		userOptions.disableInput();
+	}
+
+	@Override
+	public void setWorkPalette() {
+		userOptions.setWorkPalette();
+		credits.setWorkPalette();
+	}
+
+	@Override
+	public void setRestPalette() {
+		userOptions.setRestPalette();
+		credits.setRestPalette();
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (event.getSource() == userOptions.settings) {
@@ -51,10 +68,9 @@ public class Footer extends JPanel implements ActionListener {
 		}
 	}
 
-	private class UserOptions extends JPanel {
+	private class UserOptions extends JPanel implements PaletteSetters {
 
-		private final JButton help;
-		private final JButton settings;
+		private final Option help, settings;
 		private final ActionListener listener;
 
 		UserOptions(ActionListener listen) {
@@ -77,7 +93,31 @@ public class Footer extends JPanel implements ActionListener {
 			this.add(settings);
 		}
 
-		private class Option extends JButton {
+		@Override
+		public void setWorkPalette() {
+			help.setWorkPalette();
+			settings.setWorkPalette();
+		}
+
+		@Override
+		public void setRestPalette() {
+			help.setRestPalette();
+			settings.setRestPalette();
+		}
+
+		public void enableInput() {
+			help.setEnabled(true);
+			settings.setEnabled(true);
+			this.setEnabled(true);
+		}
+
+		public void disableInput() {
+			help.setEnabled(false);
+			settings.setEnabled(false);
+			this.setEnabled(false);
+		}
+
+		private class Option extends JButton implements PaletteSetters {
 
 			Option(ImageIcon icon) {
 				this.setIcon(icon);
@@ -86,10 +126,20 @@ public class Footer extends JPanel implements ActionListener {
 				this.setBackground(resources.colors.workThird);
 				this.addActionListener(listener);
 			}
+
+			@Override
+			public void setWorkPalette() {
+				this.setBackground(resources.colors.workThird);
+			}
+
+			@Override
+			public void setRestPalette() {
+				this.setBackground(resources.colors.restThird);
+			}
 		}
 	}
 
-	private class Credits extends JLabel {
+	private class Credits extends JLabel implements PaletteSetters {
 
 		Credits() {
 
@@ -109,6 +159,16 @@ public class Footer extends JPanel implements ActionListener {
 			this.setHorizontalAlignment(JLabel.CENTER);
 
 			this.addMouseListener(new SelectedListener());
+		}
+
+		@Override
+		public void setWorkPalette() {
+			this.setForeground(resources.colors.workSecond);
+		}
+
+		@Override
+		public void setRestPalette() {
+			this.setForeground(resources.colors.restSecond);
 		}
 
 		private class SelectedListener extends MouseAdapter {

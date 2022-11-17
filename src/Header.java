@@ -1,7 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
-public class Header extends JPanel {
+public class Header extends JPanel implements PaletteSetters {
 
 	private final Title userName;
 	private final Resources resources;
@@ -22,6 +22,16 @@ public class Header extends JPanel {
 		this.setOpaque(false);
 
 		this.add(userName);
+	}
+
+	@Override
+	public void setWorkPalette() {
+		userName.setForeground(resources.colors.workThird);
+	}
+
+	@Override
+	public void setRestPalette() {
+		userName.setForeground(resources.colors.restThird);
 	}
 
 	private class Title extends JTextField {

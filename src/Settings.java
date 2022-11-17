@@ -197,10 +197,12 @@ public class Settings extends JFrame implements ActionListener {
 			}
 
 			private void checkInputs() {
+				byte valueInput = this.getText().isBlank()? -1:Byte.parseByte(this.getText());
 				boolean activate = Arrays.stream(inputs).noneMatch(
-						input -> input.localInputField.getText().length() < 1);
+						input -> input.localInputField.getText().length() < 1),
+						higherThanZero = valueInput > 0;
 
-				if (activate) {applyButton.enableButton();}
+				if (activate && higherThanZero) {applyButton.enableButton();}
 				else {applyButton.disableButton();}
 			}
 

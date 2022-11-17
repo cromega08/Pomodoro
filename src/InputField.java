@@ -5,7 +5,7 @@ import java.awt.event.KeyListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class InputField extends JTextField implements KeyListener {
+public class InputField extends JTextField implements KeyListener, PaletteSetters {
 
     private final Resources resources;
 
@@ -13,29 +13,49 @@ public class InputField extends JTextField implements KeyListener {
 
         resources = resourcesInstance;
 
-        this.setOpaque(false);
-        this.setColumns(2);
-        this.setBorder(resources.colors.restPalette? resources.borders.underlineRestBorder :resources.borders.underlineWorkBorder);
-        this.setCaretColor(resources.colors.restPalette? resources.colors.restThird:resources.colors.workThird);
+        this.setBorder(resources.borders.underlineWorkBorder);
+        this.setCaretColor(resources.colors.workThird);
         this.setText(resources.handlerTools.fileHandler.getElementValue(element));
         this.setFont(font);
         this.setHorizontalAlignment(JTextField.CENTER);
-        this.setForeground(resources.colors.restPalette? resources.colors.restThird:resources.colors.workThird);
-        this.addKeyListener(this);
+        this.setForeground(resources.colors.workThird);
+
+        setBasicProperties();
     }
 
     InputField(Resources resourcesInstance, int indexValue, String... pairElements) {
 
         resources = resourcesInstance;
 
-        this.setOpaque(false);
-        this.setColumns(3);
         this.setBorder(resources.colors.restPalette? resources.borders.underlineRestBorder :resources.borders.underlineWorkBorder);
         this.setCaretColor(resources.colors.restPalette? resources.colors.restThird:resources.colors.workThird);
         this.setText(String.format("%d", Integer.parseInt(pairElements[indexValue])));
         this.setHorizontalAlignment(JTextField.TRAILING);
         this.setForeground(resources.colors.restPalette? resources.colors.restContrast:resources.colors.workContrast);
+
+        setBasicProperties();
+    }
+
+    private void setBasicProperties() {
+        this.setOpaque(false);
+        this.setColumns(2);
         this.addKeyListener(this);
+    }
+
+    public void enableInput() {this.setEditable(true);}
+
+    public void disableInput() {this.setEditable(false);}
+
+    public void setWorkPalette() {
+        this.setBorder(resources.borders.underlineWorkBorder);
+        this.setCaretColor(resources.colors.workThird);
+        this.setForeground(resources.colors.workThird);
+    }
+
+    public void setRestPalette() {
+        this.setBorder(resources.borders.underlineRestBorder);
+        this.setCaretColor(resources.colors.restThird);
+        this.setForeground(resources.colors.restThird);
     }
 
     private boolean checkDelete(char keyChar) {
@@ -47,7 +67,7 @@ public class InputField extends JTextField implements KeyListener {
 
         char keyChar = keyEvent.getKeyChar();
         boolean isDelete = checkDelete(keyChar);
-        Pattern pattern = Pattern.compile("[^0-9]", Pattern.UNICODE_CASE);
+        Pattern pattern = Pattern.compile("[^0-9]+", Pattern.UNICODE_CASE);
         Matcher matcher = pattern.matcher(String.format("%s", keyChar));
 
         if ((this.getText().length() >= 2 && !isDelete) || matcher.find()) {
