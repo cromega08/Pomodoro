@@ -1,7 +1,11 @@
+import javazoom.jl.decoder.JavaLayerException;
+
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 public class Main extends JPanel implements ActionListener, PaletteSetters {
 
@@ -51,31 +55,51 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		if (event.getSource() == controls.start) {
-			chronos.startChronometer(clock.getTotalSessions());
-		}
+		if (event.getSource() == controls.start) {chronos.startChronometer(clock.getTotalSessions());}
 
 		if (event.getSource() == controls.end) {
-			chronos.stopChronometer();
+			try {chronos.stopChronometer();}
+			catch (LineUnavailableException | IOException | JavaLayerException e) {throw new RuntimeException(e);}
 			restartTime();
 		}
 
 		if (event.getSource() == controls.state) {
 			String currentState = controls.state.getText();
-			if (currentState.equals("PAUSE")) {
-				controls.state.setText("CONTINUE");
-				chronos.pauseChronometer();
-			}
-			else {
-				controls.state.setText("PAUSE");
-				chronos.restartChronometer();
-			}
+			if (currentState.equals("PAUSE")) {continueButton();}
+			else {pauseButton();}
+		}
+
+		if (event.getSource() == controls.next) {
+			try {chronos.nextSession();}
+			catch (LineUnavailableException | IOException | JavaLayerException e) {throw new RuntimeException(e);}
 		}
 	}
 
-	public void restartTime() {clock.setDefaultTime();}
+	public void setWorkSession() {session.setWorkSession();}
+
+	public void setBreakSession() {session.setBreakSession();}
+
+	public void setRestSession() {session.setRestSession();}
+
+	public void restartTime() {
+		clock.setDefaultTime();
+		setCurrentSessionText((byte) 0);
+		callWorkPalette();
+	}
 
 	public void newTime(byte min, byte sec) {clock.newTime(min, sec);}
+
+	public void setCurrentSessionText(byte currentSession) {clock.setCurrentSessionText(currentSession);}
+
+	public void pauseButton() {
+		controls.state.setText("PAUSE");
+		chronos.restartChronometer();
+	}
+
+	public void continueButton() {
+		controls.state.setText("CONTINUE");
+		chronos.pauseChronometer();
+	}
 
 	private void enableStart() {controls.enableStart();}
 
@@ -138,6 +162,27 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 			this.add(working);
 			this.add(breakTime);
 			this.add(restTime);
+		}
+
+		public void setWorkSession() {
+            callWorkPalette();
+
+			working.setBorder(resources.borders.activeSessionWorkBorder);
+			working.setForeground(resources.colors.workContrast);
+		}
+
+		public void setBreakSession() {
+			callRestPalette();
+
+			breakTime.setBorder(resources.borders.activeSessionRestBorder);
+			breakTime.setForeground(resources.colors.restContrast);
+		}
+
+		public void setRestSession() {
+			callRestPalette();
+
+			restTime.setBorder(resources.borders.activeSessionRestBorder);
+			restTime.setForeground(resources.colors.restContrast);
 		}
 
 		@Override
@@ -242,6 +287,8 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 			sessions.disableInput();
 		}
 
+		public void setCurrentSessionText(byte currentSession) {sessions.setCurrentSessionText(currentSession);}
+
 		private class ClockText extends JTextField implements PaletteSetters {
 
 			ClockText() {
@@ -322,6 +369,8 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 				totalSessions.setRestPalette();
 			}
 
+			public void setCurrentSessionText(byte currentSession) {currentSessionText.setCurrentSessionText(currentSession);}
+
 			public String getSessions() {
 				return totalSessions.getText();
 			}
@@ -345,6 +394,8 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 					this.setHorizontalAlignment(JTextField.CENTER);
 					this.setForeground(resources.colors.workThird);
 				}
+
+				public void setCurrentSessionText(byte currentSession) {this.setText(String.valueOf(currentSession));}
 
 				@Override
 				public void setWorkPalette() {
@@ -379,9 +430,7 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 
 	private class Controls extends JPanel implements PaletteSetters {
 
-		private final ControlsButton start;
-		private final ControlsButton end;
-		private final ControlsButton state;
+		private final ControlsButton start, end, state, next;
 		private final ActionListener listener;
 
 		Controls(ActionListener listen) {
@@ -395,6 +444,7 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 			start = new ControlsButton("START");
 			end = new ControlsButton("END");
 			state = new ControlsButton("PAUSE");
+			next = new ControlsButton("NEXT");
 
 			//? Set: JPanel Parameters
 
@@ -409,6 +459,7 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 			start.setWorkPalette();
 			end.setWorkPalette();
 			state.setWorkPalette();
+			next.setWorkPalette();
 		}
 
 		@Override
@@ -416,6 +467,7 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 			start.setRestPalette();
 			end.setRestPalette();
 			state.setRestPalette();
+			next.setRestPalette();
 		}
 
 		public void enableStart() {
@@ -431,6 +483,7 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 		public void startButtons() {
 			this.remove(state);
 			this.remove(end);
+			this.remove(next);
 			this.add(start);
 
 			state.setText("PAUSE");
@@ -442,6 +495,7 @@ public class Main extends JPanel implements ActionListener, PaletteSetters {
 			this.remove(start);
 			this.add(state);
 			this.add(end);
+			this.add(next);
 
 			state.setText("PAUSE");
 

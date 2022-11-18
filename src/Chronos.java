@@ -1,5 +1,8 @@
+import javazoom.jl.decoder.JavaLayerException;
 import org.jdom2.IllegalDataException;
 
+import javax.sound.sampled.LineUnavailableException;
+import java.io.IOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalTime;
@@ -20,8 +23,8 @@ public class Chronos {
 
 	private Timer timer;
 	private Chronometer chronometer;
-	private int totalSessions;
-	private boolean paused;
+	private int totalSessions, restingSessions;
+	private boolean paused, startWork, startBreak, startRest;
 
 	public Chronos(Resources resourcesInstance, Main content) {
 
@@ -30,11 +33,15 @@ public class Chronos {
 		DELAY = 50;
 		SECOND = 1000;
 		paused = false;
+		startWork = false;
+		startBreak = false;
+		startRest = false;
 	}
 
 	public void startChronometer(String numberOfSessions) {
 		timer = new Timer();
 		totalSessions = Byte.parseByte(numberOfSessions);
+		restingSessions = totalSessions;
 		chronometer = new Chronometer();
 		chronometer.startTimer();
 	}
@@ -43,7 +50,9 @@ public class Chronos {
 
 	public void restartChronometer() {paused = false;}
 
-	public void stopChronometer() {chronometer.stopTimer();}
+	public void stopChronometer() throws LineUnavailableException, IOException, JavaLayerException {chronometer.stopTimer();}
+
+	public void nextSession() throws LineUnavailableException, IOException, JavaLayerException {chronometer.changeSession();}
 
 	private class Chronometer extends TimerTask {
 
@@ -65,7 +74,11 @@ public class Chronos {
 			sessionTime = sessionTime.minusSeconds(1);
 			--secondsInMinute;
 			if (secondsInMinute <= 0) {--totalTime; secondsInMinute = 60;}
-			if (totalTime < 0) {changeSession(); return;}
+			if (totalTime < 0) {
+				try {changeSession();}
+				catch (LineUnavailableException | IOException | JavaLayerException e) {throw new RuntimeException(e);}
+				return;
+			}
 			mainPanel.newTime(totalTime, (byte) (secondsInMinute - 1));
 		}
 
@@ -82,9 +95,9 @@ public class Chronos {
 			return Duration.between(execStart, execEnd).toMillis();
 		}
 
-		private void changeSession() {
+		private void changeSession() throws LineUnavailableException, IOException, JavaLayerException {
 
-			if (totalSessions <= 0) {stopTimer(); return;}
+			if (restingSessions <= 0) {stopTimer(); return;}
 
 			secondsInMinute = 1;
 
@@ -96,31 +109,47 @@ public class Chronos {
 				case "break", "rest" -> setWork();
 				default -> throw new IllegalDataException(String.format("\"currentSession\" variable have an illegal value %s", currentSession));
 			}
+
+			mainPanel.setCurrentSessionText((byte) (totalSessions - restingSessions));
+
+			resources.handlerTools.soundHandler.playChangeSound();
 		}
 
 		private void setWork() {
-			--totalSessions; --untilRest;
+			--restingSessions; --untilRest;
 			currentSession = "work";
 			totalTime = Byte.parseByte(resources.handlerTools.fileHandler.getElementValue("time-work"));
-			mainPanel.callWorkPalette();
+			mainPanel.setWorkSession();
+			startWork = Boolean.parseBoolean(resources.handlerTools.fileHandler.getElementValue("start-work"));
+
+			if (startWork) {mainPanel.pauseButton();}
+			else {mainPanel.continueButton();}
 		}
 
 		private void setBreak() {
 			currentSession = "break";
 			totalTime = Byte.parseByte(resources.handlerTools.fileHandler.getElementValue("time-break"));
-			mainPanel.callRestPalette();
+			mainPanel.setBreakSession();
+			startBreak = Boolean.parseBoolean(resources.handlerTools.fileHandler.getElementValue("start-break"));
+
+			if (startBreak) {mainPanel.pauseButton();}
+			else {mainPanel.continueButton();}
 		}
 
 		private void setRest() {
 			currentSession = "rest";
 			totalTime = Byte.parseByte(resources.handlerTools.fileHandler.getElementValue("time-rest"));
-			mainPanel.callRestPalette();
+			mainPanel.setRestSession();
+			startRest = Boolean.parseBoolean(resources.handlerTools.fileHandler.getElementValue("start-rest"));
+			if (startRest) {mainPanel.pauseButton();}
+			else {mainPanel.continueButton();}
 		}
 
 		public void startTimer() {
 			mainPanel.callDisableInput();
 			mainPanel.endButtons();
 			sessionTime = LocalTime.now(); setWork();
+			paused = false;
 			timer.schedule(this, DELAY, SECOND - timeOfExec);
 		}
 
@@ -129,6 +158,7 @@ public class Chronos {
 			mainPanel.callEnableInput();
 			mainPanel.startButtons();
 			mainPanel.restartTime();
+			resources.handlerTools.soundHandler.playEndSound();
 			paused = false;
 		}
 	}

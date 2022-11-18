@@ -1,3 +1,4 @@
+import javazoom.jl.decoder.JavaLayerException;
 import org.jdom2.JDOMException;
 
 import javax.imageio.ImageIO;
@@ -15,7 +16,7 @@ public class Resources {
 	public Borders borders;
 	public Icons icons;
 
-	public Resources() throws IOException, JDOMException {
+	public Resources() throws IOException, JDOMException, JavaLayerException {
 
 		//? Set: Handlers and Tools
 		
@@ -41,13 +42,15 @@ public class Resources {
 	public class HandlerTools {
 		
 		public String user;
-		public FileHandler fileHandler;
 		public Toolkit tools;
-		
-		HandlerTools() throws IOException, JDOMException {
+		public FileHandler fileHandler;
+		public SoundHandler soundHandler;
+
+		HandlerTools() throws IOException, JDOMException, JavaLayerException {
 			user = setUserName();
-			fileHandler = new FileHandler();
 			tools = Toolkit.getDefaultToolkit();
+			fileHandler = new FileHandler();
+			soundHandler = new SoundHandler();
 		}
 
 		private String setUserName() {
@@ -92,16 +95,19 @@ public class Resources {
 
 			//* Break and Resting Palette
 
-			restMain = new Color(0x371B58);
-			restSecond = new Color(0x4C3575);
-			restThird = new Color(0x5B4B8A);
-			restContrast = new Color(0x7858A6);
+			restMain = new Color(0x3F3B6C);
+			restSecond = new Color(0x624F82);
+			restThird = new Color(0x9F73AB);
+			restContrast = new Color(0xA3C7D6);
 		}
 	}
 	
 	public class Borders {
 
-		public Border emptyBorder, paddingBorder, lineWorkBorder, lineRestBorder, underlineWorkBorder, underlineRestBorder;
+		public Border emptyBorder, paddingBorder,
+				lineWorkBorder, lineRestBorder,
+				underlineWorkBorder, underlineRestBorder,
+				activeSessionWorkBorder, activeSessionRestBorder;
 		
 		Borders() {
 			emptyBorder = BorderFactory.createEmptyBorder(1, 1, 1, 1);
@@ -110,6 +116,8 @@ public class Resources {
 			lineRestBorder = BorderFactory.createLineBorder(colors.restSecond, 3);
 			underlineWorkBorder = BorderFactory.createMatteBorder(0, 0, 2, 0, colors.workSecond);
 			underlineRestBorder = BorderFactory.createMatteBorder(0, 0, 2, 0, colors.restSecond);
+			activeSessionWorkBorder = BorderFactory.createLineBorder(colors.workContrast, 5);
+			activeSessionRestBorder = BorderFactory.createLineBorder(colors.restContrast, 5);
 		}
 	}
 	

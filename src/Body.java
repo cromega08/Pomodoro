@@ -62,7 +62,7 @@ public class Body extends JFrame implements PaletteSetters {
 
 	public void disableMainWindow() {this.setEnabled(false);}
 
-	public void enableMainWindow() {this.setEnabled(true);}
+	public void enableMainWindow() {this.setEnabled(true); main.restartTime();}
 
 	@Override
 	public void setWorkPalette() {

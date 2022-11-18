@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <settings>
   <time>
-    <time-sessions>4</time-sessions>
+    <time-sessions>8</time-sessions>
     <time-work>1</time-work>
     <time-break>1</time-break>
     <time-rest>1</time-rest>
-    <time-interval>2</time-interval>
+    <time-interval>3</time-interval>
   </time>
   <auto-start>
     <start-work>true</start-work>
