@@ -2,9 +2,9 @@
 <settings>
   <time>
     <time-sessions>8</time-sessions>
-    <time-work>1</time-work>
-    <time-break>1</time-break>
-    <time-rest>1</time-rest>
+    <time-work>25</time-work>
+    <time-break>5</time-break>
+    <time-rest>15</time-rest>
     <time-interval>3</time-interval>
   </time>
   <auto-start>

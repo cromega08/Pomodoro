@@ -56,13 +56,21 @@ public class SoundHandler {
             if (lastThread.isAlive()) return;
 
             if (play.equals("change")) {
-                try {setChangePlayer(); changeSound.play(); changeSound.close();}
+                try {runChange();}
                 catch (JavaLayerException e) {throw new RuntimeException(e);}
             }
             else {
-                try {setEndPlayer(); endSound.play(); endSound.close();}
+                try {runEnd();}
                 catch (JavaLayerException e) {throw new RuntimeException(e);}
             }
+        }
+
+        private void runChange() throws JavaLayerException {
+            setChangePlayer(); changeSound.play(); changeSound.close();
+        }
+
+        private void runEnd() throws JavaLayerException {
+            setEndPlayer(); endSound.play(); endSound.close();
         }
     }
 }

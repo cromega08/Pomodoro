@@ -77,7 +77,7 @@ public class Settings extends JFrame implements ActionListener {
 		this.setTitle("Pomodoro - Settings");
 		this.getContentPane().setBackground(pomodoroWindow.getContentPane().getBackground());
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.addWindowListener(new SettingsListener());
+		this.addWindowListener(new OptionsListener(pomodoroWindow));
 
 		this.add(settingNumberSessions);
 		this.add(settingTimeWork);
@@ -115,13 +115,6 @@ public class Settings extends JFrame implements ActionListener {
 
 			this.dispose();
 		}
-	}
-
-	private class SettingsListener extends WindowAdapter {
-
-		public void windowOpened(WindowEvent e) {pomodoroWindow.disableMainWindow();}
-
-		public void windowClosed(WindowEvent e) {pomodoroWindow.enableMainWindow();}
 	}
 
 	private class Setting extends JPanel {

@@ -62,15 +62,11 @@ public class Footer extends JPanel implements ActionListener, PaletteSetters {
 				throw new RuntimeException(e);
 			}
 		}
-		
-		if (event.getSource() == userOptions.help) {
-
-		}
 	}
 
 	private class UserOptions extends JPanel implements PaletteSetters {
 
-		private final Option help, settings;
+		private final Option settings;
 		private final ActionListener listener;
 
 		UserOptions(ActionListener listen) {
@@ -81,7 +77,6 @@ public class Footer extends JPanel implements ActionListener, PaletteSetters {
 
 			//? Create: JButtons
 
-			help = new Option(resources.icons.helpIcon);
 			settings = new Option(resources.icons.settingsIcon);
 
 			//? Set: JPanel Parameters
@@ -89,30 +84,25 @@ public class Footer extends JPanel implements ActionListener, PaletteSetters {
 			this.setOpaque(false);
 			this.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-			this.add(help);
 			this.add(settings);
 		}
 
 		@Override
 		public void setWorkPalette() {
-			help.setWorkPalette();
 			settings.setWorkPalette();
 		}
 
 		@Override
 		public void setRestPalette() {
-			help.setRestPalette();
 			settings.setRestPalette();
 		}
 
 		public void enableInput() {
-			help.setEnabled(true);
 			settings.setEnabled(true);
 			this.setEnabled(true);
 		}
 
 		public void disableInput() {
-			help.setEnabled(false);
 			settings.setEnabled(false);
 			this.setEnabled(false);
 		}

@@ -10,13 +10,13 @@ import java.io.IOException;
 
 public class Resources {
 	
-	public HandlerTools handlerTools;
-	public ProjectDimensions projectDimensions;
-	public Colors colors;
-	public Borders borders;
-	public Icons icons;
+	public final HandlerTools handlerTools;
+	public final ProjectDimensions projectDimensions;
+	public final Colors colors;
+	public final Borders borders;
+	public final Icons icons;
 
-	public Resources() throws IOException, JDOMException, JavaLayerException {
+	public Resources() throws IOException, JDOMException {
 
 		//? Set: Handlers and Tools
 		
@@ -41,12 +41,12 @@ public class Resources {
 	
 	public class HandlerTools {
 		
-		public String user;
-		public Toolkit tools;
-		public FileHandler fileHandler;
-		public SoundHandler soundHandler;
+		public final String user;
+		public final Toolkit tools;
+		public final FileHandler fileHandler;
+		public final SoundHandler soundHandler;
 
-		HandlerTools() throws IOException, JDOMException, JavaLayerException {
+		HandlerTools() throws IOException, JDOMException {
 			user = setUserName();
 			tools = Toolkit.getDefaultToolkit();
 			fileHandler = new FileHandler();
@@ -63,8 +63,8 @@ public class Resources {
 	
 	public class ProjectDimensions {
 
-		public int screenHeight, screenWidth, windowHeight, windowWidth;
-		public Dimension screenDimensions, horizontalMarginDimension, verticalMarginDimension, minimumDimension;
+		public final int screenHeight, screenWidth, windowHeight, windowWidth;
+		public final Dimension screenDimensions, horizontalMarginDimension, verticalMarginDimension, minimumDimension;
 		
 		ProjectDimensions() {
 			screenDimensions = handlerTools.tools.getScreenSize();
@@ -81,7 +81,7 @@ public class Resources {
 	public class Colors {
 
 		public boolean restPalette;
-		public Color workMain, workSecond, workThird, workContrast, restMain, restSecond, restThird, restContrast;
+		public final Color workMain, workSecond, workThird, workContrast, restMain, restSecond, restThird, restContrast;
 		
 		Colors() {
 			restPalette = false;
@@ -104,7 +104,7 @@ public class Resources {
 	
 	public class Borders {
 
-		public Border emptyBorder, paddingBorder,
+		public final Border emptyBorder, paddingBorder,
 				lineWorkBorder, lineRestBorder,
 				underlineWorkBorder, underlineRestBorder,
 				activeSessionWorkBorder, activeSessionRestBorder;
@@ -123,7 +123,7 @@ public class Resources {
 	
 	public class Icons {
 
-		public ImageIcon helpIcon, settingsIcon, logoIcon, checkIcon, uncheckIcon;
+		public final ImageIcon helpIcon, settingsIcon, logoIcon, checkIcon, uncheckIcon;
 
 		Icons() throws IOException {
 			File helpFile = new File("res/imgs/help.png");
@@ -145,6 +145,7 @@ public class Resources {
 			File uncheckFile = new File("res/imgs/uncheck.png");
 			Image uncheckImage = ImageIO.read(uncheckFile).getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 			uncheckIcon = new ImageIcon(uncheckImage, "Checkbox Uncheck Icon");
+
 		}
 	}
 }
