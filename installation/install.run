@@ -1,0 +1,20 @@
+#!/bin/sh
+
+pomodoroRun=$(find $HOME -name cromegaPomodoroStarter.run)
+pomodoroIcon=$(find $HOME -name cromegaPomodoro.png)
+
+cd $HOME/.local/share/applications
+
+touch "pomodoro.desktop"
+echo "[Desktop Entry]" >> pomodoro.desktop
+echo "Name=Pomodoro" >> pomodoro.desktop
+echo "Comment=Pomodoro Application" >> pomodoro.desktop
+echo "Exec=$pomodoroRun" >> pomodoro.desktop
+echo "Icon=$pomodoroIcon" >> pomodoro.desktop
+echo "Terminal=false" >> pomodoro.desktop
+echo "Type=Application" >> pomodoro.desktop
+echo "Categories=Development" >> pomodoro.desktop
+echo "MimeType=x-scheme-handler/pomodoro;text/html;" >> pomodoro.desktop
+
+echo "\"Pomodoro\" was installed"
+

@@ -1,18 +1,38 @@
-## Getting Started
+# Pomodoro
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+A Desktop pomodoro application to keep track of your work sessions.
 
-## Folder Structure
+- **NOTE**: Only used in _Ubuntu_ and doesn't prepared to use in _Window_.
 
-The workspace contains two folders by default, where:
+## Tech Stack
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- **Languages**: Java, XML.
+- **Libraries**: JDOM, JLayer, Swing.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+## Installation
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+1. Download this repo inside your machine.
 
-## Dependency Management
+2. Move inside the "_installation_" dir.
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+3. Execute "_install.run_" in your terminal.
+
+```terminal
+./install.run
+```
+
+4. Wait until you see this message:
+
+```terminal
+"Pomodoro" was installed
+```
+
+5. Enjoy and be productive!.
+
+## Authors
+
+- [@Cromega08](https://www.github.com/cromega08)
+
+## License
+
+- [GNU AGPL v3.0](https://choosealicense.com/licenses/agpl-3.0/)

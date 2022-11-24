@@ -1,0 +1,12 @@
+#!/bin/sh
+
+runnerLocation=$(find $HOME -name cromegaPomodoro.run)
+locationLength=$(expr length $runnerLocation)
+nameLength=$(expr length /cromegaPomodoro.run)
+pathLength=$(expr $locationLength - $nameLength)
+runnerPath=$(echo $runnerLocation | cut -c -$pathLength)
+
+cd $runnerPath
+cd ..
+
+$(pwd)/installation/cromegaPomodoro.run
